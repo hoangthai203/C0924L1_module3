@@ -12,5 +12,5 @@ where m.mark = (select max(mark) from mark);
 select s.student_id, s.student_name, s.address, s.phone, avg(m.mark) as avg_score
 from student s
 join mark m on s.student_id = m.student_id
-group by s.student_id, s.student_name, s.address, s.phone
+group by s.student_id
 order by avg_score desc;
