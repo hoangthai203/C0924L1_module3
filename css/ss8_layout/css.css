@@ -1,0 +1,25 @@
+*{
+    margin:0;
+    box-sizing: border-box;
+}
+
+.container{
+    height: 100vh;
+}
+header{
+    background: #7952b3;
+    height: 8%;
+}
+.content{
+
+}
+.row{
+    display: flex;
+    flex-wrap: wrap;
+}
+.col-m-1{
+    width: 8.3334%;
+}
+.col-m-2{
+    width: 16.6667%;
+}

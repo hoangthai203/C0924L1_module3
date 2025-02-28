@@ -1,0 +1,116 @@
+/* Reset mặc định */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Container chính */
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Cố định header khi cuộn */
+.header {
+    background: black;
+    color: white;
+    height: 8%;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Logo */
+.logo-header {
+    text-align: center;
+    padding: 10px;
+}
+
+/* Navigation */
+.header ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+}
+
+.header ul li {
+    padding: 10px 20px;
+}
+
+.header ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.header ul li a:hover {
+    font-weight: bold;
+    color: #ff9900;
+}
+
+/* Bố cục chính */
+.content {
+    display: flex;
+    flex-grow: 1;
+    margin-top: 50px;
+}
+
+/* Danh sách video bên trái */
+.left {
+    background: darkgray;
+    padding: 10px;
+}
+
+.left img {
+    width: 100%;
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Video chính */
+.main {
+    padding: 20px;
+    background: white;
+}
+
+.main img {
+    width: 100%;
+}
+
+.main h2 {
+    color: red;
+    margin-top: 10px;
+}
+
+/* Footer */
+.footer {
+    background: dimgray;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Responsive */
+@media only screen and (max-width: 740px) {
+    .header ul {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .content {
+        flex-direction: column;
+    }
+
+    .left, .main {
+        width: 100%;
+    }
+}
