@@ -22,7 +22,17 @@ public class ProductService implements IProductService {
         // validate cho này
         productRepository.add(product);
         return true;
-
     }
+        @Override
+        public List<Product> searchByName(String name) {
+
+            return productRepository.searchByName(name);
+        }
+
+        @Override
+        public boolean deleteById(int id) {
+            return productRepository.deleteById(id);
+    }
+
 }
 

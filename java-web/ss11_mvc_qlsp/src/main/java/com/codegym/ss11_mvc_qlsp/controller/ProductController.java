@@ -27,10 +27,10 @@ public class ProductController extends HttpServlet {
                 showFormCreate(req,resp);
                 break;
             case "delete":
-                // xoá
+                deleteById(req,resp);
                 break;
-            case "update":
-                // update
+            case "search":
+                searchByName(req,resp);
                 break;
             default:
                 // trả về list
@@ -38,6 +38,30 @@ public class ProductController extends HttpServlet {
 
         }
 
+    }
+
+    private void searchByName(HttpServletRequest req, HttpServletResponse resp) {
+        String searchName = req.getParameter("searchName");
+        List<Product> searchList = productService.searchByName(searchName);
+        req.setAttribute("productList", searchList);
+        req.setAttribute("searchName", searchName);
+        try {
+            req.getRequestDispatcher("/views/product/list.jsp").forward(req,resp);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void deleteById(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int deleteId = Integer.parseInt(req.getParameter("deleteId"));
+        boolean isDeleteSuccess =productService.deleteById(deleteId);
+        String mess = "Delete not success";
+        if(isDeleteSuccess){
+            mess = "Delete success";
+        }
+        resp.sendRedirect("/products?mess="+mess);
     }
 
     private void showFormCreate(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -50,8 +74,6 @@ public class ProductController extends HttpServlet {
         req.setAttribute("productList", productList);
         req.getRequestDispatcher("/views/product/list.jsp").forward(req,resp);
     }
-
-
 
 
     @Override
@@ -77,20 +99,31 @@ public class ProductController extends HttpServlet {
         }
     }
     private void save(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        String name = req.getParameter("name");
-        double pirce = Double.parseDouble(req.getParameter("pirce"));
-        String description = req.getParameter("description");
-        String manufacturer = req.getParameter("manufacturer");
-        Product product = new Product(id,name,pirce,description,manufacturer);
-        boolean flag = productService.add(product);
-        if (flag){
-            // thêm mới thành công
-            resp.sendRedirect("/students?mess=Created succes");
-        }else {
-            // không thaành công trả vè form thêm mới
-            showFormCreate(req,resp);
-        }
+        try {
+            int id = Integer.parseInt(req.getParameter("id"));
 
+            String name = req.getParameter("name");
+            String description = req.getParameter("description");
+            String manufacturer = req.getParameter("manufacturer");
+
+            double price = 0.0;
+            if (req.getParameter("price") != null && !req.getParameter("price").trim().isEmpty()) {
+                price = Double.parseDouble(req.getParameter("price"));
+            }
+
+            Product product = new Product(id, name, price, description, manufacturer);
+
+            boolean flag = productService.add(product);
+
+            if (flag) {
+                resp.sendRedirect("/products?mess=Created success");
+            } else {
+                showFormCreate(req, resp);
+            }
+        } catch (NumberFormatException e) {
+            req.setAttribute("error", "Lỗi nhập liệu. Vui lòng kiểm tra lại.");
+            showFormCreate(req, resp);
+        }
     }
+
 }
