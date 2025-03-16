@@ -1,8 +1,6 @@
 package com.codegym.ss10_jstl.repository;
 
-
 import com.codegym.ss10_jstl.model.Student;
-
 import java.util.ArrayList;
 import java.util.List;
 

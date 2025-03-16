@@ -8,4 +8,6 @@ public interface IProductRepository {
     boolean add(Product product);
     List<Product> searchByName(String name);
     boolean deleteById(int id);
+    boolean update(Product product);
+    Product findById(int id);
 }

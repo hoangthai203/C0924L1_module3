@@ -41,7 +41,7 @@
     <div>
         <h3>${product == null ? "Thêm mới sản phẩm" : "Chỉnh sửa sản phẩm"}</h3>
 
-        <input type="number" name="id" value="${product.id}" placeholder="Nhập ID" required /><br>
+<%--        <input type="number" name="id" value="${product.id}" placeholder="Nhập ID" required /><br>--%>
         <input type="text" name="name" value="${product.name}" placeholder="Nhập tên sản phẩm" required /><br>
         <input type="number" step="0.01" name="price" value="${product.price}" placeholder="Nhập giá"><br>
         <input type="text" name="description" value="${product.description}" placeholder="Nhập mô tả"><br>
