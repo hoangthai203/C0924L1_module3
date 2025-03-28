@@ -12,7 +12,7 @@ public class ProductRepository implements IProductRepository {
     private final String SELECT_ALL = "select * from product";
     private final String INSERT_INTO = "insert into product(name, price, description, manufacturer) values (?, ?, ?, ?)";
     private final String DELETE_BY_ID = "delete from product where id = ?";
-    private final String SELECT_BY_ID = "select * from product where id = ?"; // Câu lệnh tìm sản phẩm theo id
+    private final String SELECT_BY_ID = "select * from product where id = ?";
 
     @Override
     public List<Product> findAll() {
