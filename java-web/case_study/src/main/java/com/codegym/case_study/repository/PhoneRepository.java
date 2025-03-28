@@ -55,7 +55,8 @@ public class PhoneRepository {
         int dungLuongPin = resultSet.getInt("dung_luong_pin");
         String heDieuHanh = resultSet.getString("he_dieu_hanh");
         String trangThai = resultSet.getString("trang_thai");
+        String hinhAnh = resultSet.getString("hinh_anh"); // 🛠 Lấy cột hinh_anh
 
-        return new Phone(id, ten, thuongHieu, model, namSanXuat, gia, ram, boNhoTrong, dungLuongPin, heDieuHanh, trangThai);
+        return new Phone(id, ten, thuongHieu, model, namSanXuat, gia, ram, boNhoTrong, dungLuongPin, heDieuHanh, trangThai, hinhAnh);
     }
 }

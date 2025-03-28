@@ -1,9 +1,10 @@
 package com.codegym.case_study.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cart {
+public class Cart implements Serializable {
     private List<CartItem> danhSachSanPham;
 
     public Cart() {
@@ -15,14 +16,29 @@ public class Cart {
     }
 
     public void themSanPham(CartItem item) {
+        for (CartItem sp : danhSachSanPham) {
+            if (sp.getIdSanPham() == item.getIdSanPham()) {
+                sp.setSoLuong(sp.getSoLuong() + item.getSoLuong());
+                return;
+            }
+        }
         this.danhSachSanPham.add(item);
     }
 
-    public double tinhTongTien() {
-        double tongTien = 0;
+    public void capNhatSanPham(int idSanPham, int soLuong) {
         for (CartItem item : danhSachSanPham) {
-            tongTien += item.getThanhTien();
+            if (item.getIdSanPham() == idSanPham) {
+                item.setSoLuong(soLuong);
+                return;
+            }
         }
-        return tongTien;
+    }
+
+    public void xoaSanPham(int idSanPham) {
+        danhSachSanPham.removeIf(item -> item.getIdSanPham() == idSanPham);
+    }
+
+    public double tinhTongTien() {
+        return danhSachSanPham.stream().mapToDouble(CartItem::getThanhTien).sum();
     }
 }

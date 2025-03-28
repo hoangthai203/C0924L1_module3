@@ -8,7 +8,6 @@ import com.codegym.case_study.util.BaseRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 
 public class CartRepository implements ICartRepository {
     private static final String LAY_GIO_HANG = "SELECT * FROM gio_hang WHERE id_nguoi_dung = ?";
@@ -16,13 +15,13 @@ public class CartRepository implements ICartRepository {
     private static final String CAP_NHAT_GIO = "UPDATE gio_hang SET so_luong = ? WHERE id_nguoi_dung = ? AND id_san_pham = ?";
     private static final String XOA_SAN_PHAM = "DELETE FROM gio_hang WHERE id_nguoi_dung = ? AND id_san_pham = ?";
     private static final String XOA_TOAN_BO = "DELETE FROM gio_hang WHERE id_nguoi_dung = ?";
+    private static final String KIEM_TRA_SAN_PHAM = "SELECT so_luong FROM gio_hang WHERE id_nguoi_dung = ? AND id_san_pham = ?";
 
-    private final PhoneRepository phoneRepository = new PhoneRepository(); // ✅ Thêm PhoneRepository
+    private final PhoneRepository phoneRepository = new PhoneRepository();
 
     @Override
     public Cart layGioHangTheoNguoiDung(int idNguoiDung) {
         Cart gioHang = new Cart();
-
         try (Connection ketNoi = BaseRepository.getConnection();
              PreparedStatement truyVan = ketNoi.prepareStatement(LAY_GIO_HANG)) {
             truyVan.setInt(1, idNguoiDung);
@@ -31,7 +30,7 @@ public class CartRepository implements ICartRepository {
                     int idSanPham = ketQua.getInt("id_san_pham");
                     int soLuong = ketQua.getInt("so_luong");
 
-                    Phone phone = phoneRepository.getPhoneById(idSanPham); // ✅ Lấy thông tin điện thoại
+                    Phone phone = phoneRepository.getPhoneById(idSanPham);
                     if (phone != null) {
                         gioHang.getDanhSachSanPham().add(new CartItem(phone, soLuong));
                     }
@@ -43,16 +42,34 @@ public class CartRepository implements ICartRepository {
         return gioHang;
     }
 
-    @Override
-    public void themVaoGioHang(int idNguoiDung, CartItem sanPham) {
+    private boolean kiemTraSanPhamTonTai(int idNguoiDung, int idSanPham) {
         try (Connection ketNoi = BaseRepository.getConnection();
-             PreparedStatement truyVan = ketNoi.prepareStatement(THEM_VAO_GIO)) {
+             PreparedStatement truyVan = ketNoi.prepareStatement(KIEM_TRA_SAN_PHAM)) {
             truyVan.setInt(1, idNguoiDung);
-            truyVan.setInt(2, sanPham.getIdSanPham()); // ✅ Lấy ID từ CartItem
-            truyVan.setInt(3, sanPham.getSoLuong());
-            truyVan.executeUpdate();
+            truyVan.setInt(2, idSanPham);
+            try (ResultSet ketQua = truyVan.executeQuery()) {
+                return ketQua.next(); // Trả về true nếu có dữ liệu
+            }
         } catch (Exception loi) {
             loi.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public void themVaoGioHang(int idNguoiDung, CartItem sanPham) {
+        if (kiemTraSanPhamTonTai(idNguoiDung, sanPham.getIdSanPham())) {
+            capNhatSanPhamTrongGio(idNguoiDung, sanPham);
+        } else {
+            try (Connection ketNoi = BaseRepository.getConnection();
+                 PreparedStatement truyVan = ketNoi.prepareStatement(THEM_VAO_GIO)) {
+                truyVan.setInt(1, idNguoiDung);
+                truyVan.setInt(2, sanPham.getIdSanPham());
+                truyVan.setInt(3, sanPham.getSoLuong());
+                truyVan.executeUpdate();
+            } catch (Exception loi) {
+                loi.printStackTrace();
+            }
         }
     }
 

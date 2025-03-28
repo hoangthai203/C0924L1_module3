@@ -2,7 +2,14 @@
 <%@ page import="com.codegym.case_study.model.Cart" %>
 <%@ page import="com.codegym.case_study.model.CartItem" %>
 <%@ page import="java.util.List" %>
-<jsp:useBean id="gioHang" scope="request" class="com.codegym.case_study.model.Cart"/>
+
+<%
+  // Lấy giỏ hàng từ session
+  Cart gioHang = (Cart) session.getAttribute("gioHang");
+  if (gioHang == null) {
+    gioHang = new Cart();
+  }
+%>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -15,7 +22,7 @@
 <div class="container mt-5">
   <h2 class="mb-4">🛒 Giỏ hàng của bạn</h2>
 
-  <% if (gioHang != null && gioHang.getDanhSachSanPham().size() > 0) { %>
+  <% if (!gioHang.getDanhSachSanPham().isEmpty()) { %>
   <table class="table table-bordered">
     <thead class="table-dark">
     <tr>
@@ -39,13 +46,16 @@
       <td>
         <form action="cart?action=update" method="post" class="d-flex">
           <input type="hidden" name="id" value="<%= item.getPhone().getId() %>">
-          <input type="number" name="quantity" value="<%= item.getSoLuong() %>" class="form-control w-50">
+          <input type="number" name="quantity" value="<%= item.getSoLuong() %>" class="form-control w-50" min="1">
           <button type="submit" class="btn btn-sm btn-primary ms-2">Cập nhật</button>
         </form>
       </td>
       <td><%= item.getThanhTien() %> VND</td>
       <td>
-        <a href="cart?action=remove&id=<%= item.getPhone().getId() %>" class="btn btn-sm btn-danger">Xóa</a>
+        <form action="cart?action=remove" method="post">
+          <input type="hidden" name="id" value="<%= item.getPhone().getId() %>">
+          <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+        </form>
       </td>
     </tr>
     <% } %>
@@ -53,13 +63,22 @@
   </table>
 
   <h4 class="text-end">🛍 Tổng cộng: <strong><%= gioHang.tinhTongTien() %> VND</strong></h4>
-  <a href="checkout.jsp" class="btn btn-success float-end">Thanh toán</a>
+
+  <div class="d-flex justify-content-between">
+    <a href="index.jsp" class="btn btn-secondary">⬅ Quay lại mua hàng</a>
+
+    <form action="cart?action=clear" method="post">
+      <button type="submit" class="btn btn-warning">🗑 Xóa toàn bộ giỏ hàng</button>
+    </form>
+
+    <a href="checkout.jsp" class="btn btn-success">Thanh toán</a>
+  </div>
 
   <% } else { %>
   <p class="alert alert-warning">Giỏ hàng của bạn đang trống!</p>
+  <a href="index.jsp" class="btn btn-secondary">⬅ Quay lại mua hàng</a>
   <% } %>
 
-  <a href="index.jsp" class="btn btn-secondary mt-3">⬅ Quay lại mua hàng</a>
 </div>
 </body>
 </html>

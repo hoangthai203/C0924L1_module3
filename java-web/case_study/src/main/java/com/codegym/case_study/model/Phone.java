@@ -12,8 +12,9 @@ public class Phone {
     private int dungLuongPin;
     private String heDieuHanh;
     private String trangThai;
+    private String hinhAnh;  // 🛠 Thêm thuộc tính hình ảnh
 
-    public Phone(int id, String ten, String thuongHieu, String model, int namSanXuat, double gia, int ram, int boNhoTrong, int dungLuongPin, String heDieuHanh, String trangThai) {
+    public Phone(int id, String ten, String thuongHieu, String model, int namSanXuat, double gia, int ram, int boNhoTrong, int dungLuongPin, String heDieuHanh, String trangThai, String hinhAnh) {
         this.id = id;
         this.ten = ten;
         this.thuongHieu = thuongHieu;
@@ -25,6 +26,7 @@ public class Phone {
         this.dungLuongPin = dungLuongPin;
         this.heDieuHanh = heDieuHanh;
         this.trangThai = trangThai;
+        this.hinhAnh = hinhAnh;  // 🛠 Khởi tạo giá trị hình ảnh
     }
 
     public int getId() { return id; }
@@ -38,4 +40,7 @@ public class Phone {
     public int getDungLuongPin() { return dungLuongPin; }
     public String getHeDieuHanh() { return heDieuHanh; }
     public String getTrangThai() { return trangThai; }
+
+    public String getHinhAnh() { return hinhAnh; }  // 🛠 Getter cho hình ảnh
+    public void setHinhAnh(String hinhAnh) { this.hinhAnh = hinhAnh; }  // 🛠 Setter cho hình ảnh
 }

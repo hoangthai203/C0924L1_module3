@@ -4,56 +4,64 @@ import com.codegym.case_study.model.Cart;
 import com.codegym.case_study.model.CartItem;
 import com.codegym.case_study.model.Phone;
 import com.codegym.case_study.repository.PhoneRepository;
-import com.codegym.case_study.service.ICartService;
 
-import java.util.List;
+import java.util.*;
 
 public class CartService implements ICartService {
-    private Cart gioHang;
-    private PhoneRepository phoneRepository;
-
-    public CartService() {
-        this.gioHang = new Cart();
-        this.phoneRepository = new PhoneRepository(); // ✅ Khởi tạo PhoneRepository để lấy thông tin điện thoại
-    }
+    private Map<Integer, Cart> danhSachGioHang = new HashMap<>();
+    private PhoneRepository phoneRepository = new PhoneRepository();
 
     @Override
-    public void themSanPhamVaoGio(int idSanPham, int soLuong) {
+    public void themSanPhamVaoGio(int idNguoiDung, int idSanPham, int soLuong) {
+        Cart gioHang = danhSachGioHang.getOrDefault(idNguoiDung, new Cart());
+
         for (CartItem item : gioHang.getDanhSachSanPham()) {
-            if (item.getIdSanPham() == idSanPham) {
+            if (item.getPhone().getId() == idSanPham) {
                 item.setSoLuong(item.getSoLuong() + soLuong);
+                danhSachGioHang.put(idNguoiDung, gioHang);
                 return;
             }
         }
 
-        Phone phone = phoneRepository.getPhoneById(idSanPham); // ✅ Lấy thông tin sản phẩm từ database
+        Phone phone = phoneRepository.getPhoneById(idSanPham);
         if (phone != null) {
             gioHang.getDanhSachSanPham().add(new CartItem(phone, soLuong));
+            danhSachGioHang.put(idNguoiDung, gioHang);
         }
     }
 
     @Override
-    public void xoaSanPhamKhoiGio(int idSanPham) {
-        gioHang.getDanhSachSanPham().removeIf(item -> item.getIdSanPham() == idSanPham);
+    public void xoaSanPhamKhoiGio(int idNguoiDung, int idSanPham) {
+        Cart gioHang = danhSachGioHang.getOrDefault(idNguoiDung, new Cart());
+
+        gioHang.getDanhSachSanPham().removeIf(item -> item.getPhone().getId() == idSanPham);
+        danhSachGioHang.put(idNguoiDung, gioHang);
     }
 
     @Override
-    public void capNhatSoLuong(int idSanPham, int soLuongMoi) {
+    public void capNhatSoLuong(int idNguoiDung, int idSanPham, int soLuongMoi) {
+        Cart gioHang = danhSachGioHang.getOrDefault(idNguoiDung, new Cart());
+
         for (CartItem item : gioHang.getDanhSachSanPham()) {
-            if (item.getIdSanPham() == idSanPham) {
-                item.setSoLuong(soLuongMoi);
+            if (item.getPhone().getId() == idSanPham) {
+                if (soLuongMoi == 0) {
+                    gioHang.getDanhSachSanPham().remove(item);
+                } else {
+                    item.setSoLuong(soLuongMoi);
+                }
+                danhSachGioHang.put(idNguoiDung, gioHang);
                 return;
             }
         }
     }
 
     @Override
-    public List<CartItem> layDanhSachSanPham() {
-        return gioHang.getDanhSachSanPham();
+    public Cart layGioHang(int idNguoiDung) {
+        return danhSachGioHang.getOrDefault(idNguoiDung, new Cart());
     }
 
     @Override
-    public Cart layGioHang() {
-        return gioHang;
+    public void xoaToanBoGioHang(int idNguoiDung) {
+        danhSachGioHang.remove(idNguoiDung);
     }
 }

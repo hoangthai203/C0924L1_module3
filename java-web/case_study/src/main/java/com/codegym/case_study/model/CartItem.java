@@ -1,6 +1,8 @@
 package com.codegym.case_study.model;
 
-public class CartItem {
+import java.io.Serializable;
+
+public class CartItem implements Serializable {
     private Phone phone;
     private int soLuong;
 
@@ -22,7 +24,7 @@ public class CartItem {
     }
 
     public int getIdSanPham() {
-        return phone.getId(); // ✅ Lấy ID của điện thoại
+        return phone.getId();
     }
 
     public double getThanhTien() {
