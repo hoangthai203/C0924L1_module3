@@ -12,6 +12,7 @@ import java.util.List;
 public class PhoneRepository {
     private static final String SELECT_ALL_PHONES = "SELECT * FROM dien_thoai";
     private static final String SELECT_PHONE_BY_ID = "SELECT * FROM dien_thoai WHERE id_dien_thoai = ?";
+    private static final String SEARCH_PHONE_BY_NAME = "SELECT * FROM dien_thoai WHERE ten LIKE ?";
 
     public List<Phone> getAllPhones() {
         List<Phone> danhSachDienThoai = new ArrayList<>();
@@ -43,6 +44,22 @@ public class PhoneRepository {
         return null; // Trả về null nếu không tìm thấy điện thoại
     }
 
+    public List<Phone> timKiemDienThoai(String keyword) {
+        List<Phone> ketQuaTimKiem = new ArrayList<>();
+        try (Connection connection = BaseRepository.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SEARCH_PHONE_BY_NAME)) {
+            preparedStatement.setString(1, "%" + keyword + "%");
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    ketQuaTimKiem.add(mapResultSetToPhone(resultSet));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ketQuaTimKiem;
+    }
+
     private Phone mapResultSetToPhone(ResultSet resultSet) throws Exception {
         int id = resultSet.getInt("id_dien_thoai");
         String ten = resultSet.getString("ten");
@@ -55,7 +72,7 @@ public class PhoneRepository {
         int dungLuongPin = resultSet.getInt("dung_luong_pin");
         String heDieuHanh = resultSet.getString("he_dieu_hanh");
         String trangThai = resultSet.getString("trang_thai");
-        String hinhAnh = resultSet.getString("hinh_anh"); // 🛠 Lấy cột hinh_anh
+        String hinhAnh = resultSet.getString("hinh_anh");
 
         return new Phone(id, ten, thuongHieu, model, namSanXuat, gia, ram, boNhoTrong, dungLuongPin, heDieuHanh, trangThai, hinhAnh);
     }

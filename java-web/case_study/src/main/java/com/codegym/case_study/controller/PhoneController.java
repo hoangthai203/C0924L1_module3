@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "PhoneController", urlPatterns = {"/phone", "/phone/detail"})
+@WebServlet(name = "PhoneController", urlPatterns = {"/phone", "/phone/detail", "/phone/search"})
 public class PhoneController extends HttpServlet {
     private final IPhoneService phoneService = new PhoneService();
 
@@ -26,6 +26,9 @@ public class PhoneController extends HttpServlet {
             case "/phone/detail":
                 showPhoneDetail(request, response);
                 break;
+            case "/phone/search":
+                timKiemDienThoai(request, response);
+                break;
             default:
                 response.sendRedirect("/phone");
         }
@@ -33,7 +36,7 @@ public class PhoneController extends HttpServlet {
 
     private void showPhoneList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Phone> phoneList = phoneService.findAll();
-        request.setAttribute("phoneList", phoneList); // Đảm bảo JSP nhận đúng tên biến
+        request.setAttribute("phoneList", phoneList);
         request.getRequestDispatcher("/views/product/danh_sach_san_pham.jsp").forward(request, response);
     }
 
@@ -47,5 +50,11 @@ public class PhoneController extends HttpServlet {
             response.sendRedirect("/phone");
         }
     }
-}
 
+    private void timKiemDienThoai(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String keyword = request.getParameter("keyword");
+        List<Phone> danhSachTimKiem = phoneService.timKiemDienThoai(keyword);
+        request.setAttribute("phoneList", danhSachTimKiem);
+        request.getRequestDispatcher("/views/product/danh_sach_san_pham.jsp").forward(request, response);
+    }
+}

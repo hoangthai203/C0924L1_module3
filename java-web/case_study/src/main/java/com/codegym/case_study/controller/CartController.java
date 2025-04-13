@@ -1,6 +1,7 @@
 package com.codegym.case_study.controller;
 
 import com.codegym.case_study.model.Cart;
+import com.codegym.case_study.model.User;
 import com.codegym.case_study.service.CartService;
 import com.codegym.case_study.service.ICartService;
 
@@ -23,103 +24,87 @@ public class CartController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
-
-        if (action == null) {
-            action = "";
-        }
+        String action = request.getServletPath();
 
         switch (action) {
-            case "add":
+            case "/cart/add":
                 themSanPhamVaoGio(request, response);
                 break;
-            case "remove":
+            case "/cart/remove":
                 xoaSanPhamKhoiGio(request, response);
                 break;
-            case "update":
+            case "/cart/update":
                 capNhatSoLuong(request, response);
                 break;
-            case "clear":
+            case "/cart/clear":
                 xoaToanBoGio(request, response);
                 break;
+            case "/cart":
             default:
                 xemGioHang(request, response);
                 break;
         }
     }
 
-    private void xemGioHang(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private Integer getIdNguoiDung(HttpServletRequest request) {
         HttpSession session = request.getSession();
-
-        // Nếu không có idNguoiDung, đặt giá trị mặc định -1
-        Integer idNguoiDung = (Integer) session.getAttribute("idNguoiDung");
-        if (idNguoiDung == null) {
-            idNguoiDung = -1;
-            session.setAttribute("idNguoiDung", idNguoiDung);
+        User user = (User) session.getAttribute("loggedUser");
+        if (user == null) {
+            System.out.println("Không tìm thấy người dùng trong session");
+            return null;
         }
+        System.out.println("ID người dùng: " + user.getId());
+        return user.getId();
+    }
+
+    private void xemGioHang(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Integer idNguoiDung = getIdNguoiDung(request);
+        System.out.println("Xem giỏ hàng - ID người dùng: " + idNguoiDung);
 
         Cart gioHang = cartService.layGioHang(idNguoiDung);
+        System.out.println("Số sản phẩm trong giỏ: " + (gioHang != null ? gioHang.getDanhSachSanPham().size() : 0));
+
         request.setAttribute("gioHang", gioHang);
         request.getRequestDispatcher("/views/product/cart.jsp").forward(request, response);
     }
 
     private void themSanPhamVaoGio(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HttpSession session = request.getSession();
-        Integer idNguoiDung = (Integer) session.getAttribute("idNguoiDung");
-
+        System.out.println("Đang thêm sản phẩm vào giỏ...");
+        Integer idNguoiDung = getIdNguoiDung(request);
         if (idNguoiDung == null) {
-            idNguoiDung = -1;
-            session.setAttribute("idNguoiDung", idNguoiDung);
+            System.out.println("Người dùng chưa đăng nhập");
+            response.sendRedirect(request.getContextPath() + "/dang-nhap");
+            return;
         }
 
-        int idSanPham = Integer.parseInt(request.getParameter("id"));
-        int soLuong = Integer.parseInt(request.getParameter("quantity"));
+        int idSanPham = Integer.parseInt(request.getParameter("idSanPham"));
+        int soLuong = Integer.parseInt(request.getParameter("soLuong"));
+        System.out.println("idSanPham: " + idSanPham + ", soLuong: " + soLuong);
 
         cartService.themSanPhamVaoGio(idNguoiDung, idSanPham, soLuong);
-        response.sendRedirect("cart");
+        response.sendRedirect(request.getContextPath() + "/cart");
     }
 
     private void xoaSanPhamKhoiGio(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HttpSession session = request.getSession();
-        Integer idNguoiDung = (Integer) session.getAttribute("idNguoiDung");
+        Integer idNguoiDung = getIdNguoiDung(request);
+        int idSanPham = Integer.parseInt(request.getParameter("idSanPham"));
 
-        if (idNguoiDung == null) {
-            idNguoiDung = -1;
-            session.setAttribute("idNguoiDung", idNguoiDung);
-        }
-
-        int idSanPham = Integer.parseInt(request.getParameter("id"));
         cartService.xoaSanPhamKhoiGio(idNguoiDung, idSanPham);
-        response.sendRedirect("cart");
+        response.sendRedirect(request.getContextPath() + "/cart");
     }
 
     private void capNhatSoLuong(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HttpSession session = request.getSession();
-        Integer idNguoiDung = (Integer) session.getAttribute("idNguoiDung");
-
-        if (idNguoiDung == null) {
-            idNguoiDung = -1;
-            session.setAttribute("idNguoiDung", idNguoiDung);
-        }
-
-        int idSanPham = Integer.parseInt(request.getParameter("id"));
-        int soLuongMoi = Integer.parseInt(request.getParameter("quantity"));
+        Integer idNguoiDung = getIdNguoiDung(request);
+        int idSanPham = Integer.parseInt(request.getParameter("idSanPham"));
+        int soLuongMoi = Integer.parseInt(request.getParameter("soLuong"));
 
         cartService.capNhatSoLuong(idNguoiDung, idSanPham, soLuongMoi);
-        response.sendRedirect("cart");
+        response.sendRedirect(request.getContextPath() + "/cart");
     }
 
     private void xoaToanBoGio(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HttpSession session = request.getSession();
-        Integer idNguoiDung = (Integer) session.getAttribute("idNguoiDung");
-
-        if (idNguoiDung == null) {
-            idNguoiDung = -1;
-            session.setAttribute("idNguoiDung", idNguoiDung);
-        }
-
+        Integer idNguoiDung = getIdNguoiDung(request);
         cartService.xoaToanBoGioHang(idNguoiDung);
-        response.sendRedirect("cart");
+        response.sendRedirect(request.getContextPath() + "/cart");
     }
 }
-

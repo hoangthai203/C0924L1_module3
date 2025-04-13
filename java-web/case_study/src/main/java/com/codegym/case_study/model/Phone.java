@@ -29,18 +29,97 @@ public class Phone {
         this.hinhAnh = hinhAnh;  // 🛠 Khởi tạo giá trị hình ảnh
     }
 
-    public int getId() { return id; }
-    public String getTen() { return ten; }
-    public String getThuongHieu() { return thuongHieu; }
-    public String getModel() { return model; }
-    public int getNamSanXuat() { return namSanXuat; }
-    public double getGia() { return gia; }
-    public int getRam() { return ram; }
-    public int getBoNhoTrong() { return boNhoTrong; }
-    public int getDungLuongPin() { return dungLuongPin; }
-    public String getHeDieuHanh() { return heDieuHanh; }
-    public String getTrangThai() { return trangThai; }
+    public int getId() {
+        return id;
+    }
 
-    public String getHinhAnh() { return hinhAnh; }  // 🛠 Getter cho hình ảnh
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTen() {
+        return ten;
+    }
+
+    public void setTen(String ten) {
+        this.ten = ten;
+    }
+
+    public String getThuongHieu() {
+        return thuongHieu;
+    }
+
+    public void setThuongHieu(String thuongHieu) {
+        this.thuongHieu = thuongHieu;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public int getNamSanXuat() {
+        return namSanXuat;
+    }
+
+    public void setNamSanXuat(int namSanXuat) {
+        this.namSanXuat = namSanXuat;
+    }
+
+    public double getGia() {
+        return gia;
+    }
+
+    public void setGia(double gia) {
+        this.gia = gia;
+    }
+
+    public int getRam() {
+        return ram;
+    }
+
+    public void setRam(int ram) {
+        this.ram = ram;
+    }
+
+    public int getBoNhoTrong() {
+        return boNhoTrong;
+    }
+
+    public void setBoNhoTrong(int boNhoTrong) {
+        this.boNhoTrong = boNhoTrong;
+    }
+
+    public int getDungLuongPin() {
+        return dungLuongPin;
+    }
+
+    public void setDungLuongPin(int dungLuongPin) {
+        this.dungLuongPin = dungLuongPin;
+    }
+
+    public String getHeDieuHanh() {
+        return heDieuHanh;
+    }
+
+    public void setHeDieuHanh(String heDieuHanh) {
+        this.heDieuHanh = heDieuHanh;
+    }
+
+    public String getTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(String trangThai) {
+        this.trangThai = trangThai;
+    }
+
+    public String getHinhAnh() {
+        return hinhAnh;
+    }
+
     public void setHinhAnh(String hinhAnh) { this.hinhAnh = hinhAnh; }  // 🛠 Setter cho hình ảnh
 }

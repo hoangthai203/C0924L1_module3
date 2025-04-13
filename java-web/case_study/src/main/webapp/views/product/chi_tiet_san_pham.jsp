@@ -68,9 +68,18 @@
 
         <!-- Tài khoản & Giỏ hàng -->
         <div class="d-flex align-items-center">
-            <button class="btn btn-outline-light me-3">
-                <i class="fas fa-user"></i> Tài khoản
-            </button>
+            <c:choose>
+                <c:when test="${not empty sessionScope.loggedUser}">
+                    <span class="text-white me-3">👤 ${sessionScope.loggedUser.tenDangNhap}</span>
+                    <a href="/logout" class="btn btn-danger">Đăng xuất</a>
+                </c:when>
+                <c:otherwise>
+                    <a href="${pageContext.request.contextPath}/dang-nhap" class="btn btn-outline-light me-3">
+                        <i class="fas fa-user"></i> Đăng nhập
+                    </a>
+                </c:otherwise>
+            </c:choose>
+
             <a href="/cart" class="btn btn-dark position-relative">
                 <i class="fas fa-shopping-cart"></i> Giỏ hàng
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
@@ -110,8 +119,8 @@
                 <div class="d-grid gap-2">
                     <button class="btn btn-success btn-custom btn-buy">Mua Ngay</button>
                     <form action="${pageContext.request.contextPath}/cart/add" method="get">
-                        <input type="hidden" name="id" value="${phone.id}">
-                        <input type="number" name="quantity" value="1" min="1">
+                        <input type="hidden" name="idSanPham" value="${phone.id}">
+                        <input type="number" name="soLuong" value="1" min="1">
                         <button type="submit" class="btn btn-warning btn-custom">Thêm vào giỏ hàng</button>
                     </form>
                 </div>

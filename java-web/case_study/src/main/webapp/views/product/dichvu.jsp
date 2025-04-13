@@ -11,8 +11,16 @@
 <body>
 <div class="container">
   <h2 class="mt-4">Danh Sách Dịch Vụ</h2>
+
+  <!-- Nút Quay Lại Trang Chủ -->
+  <a href="${pageContext.request.contextPath}/" class="btn btn-secondary mb-3">
+    ⬅ Quay lại Trang Chủ
+  </a>
+
+  <!-- Nút Thêm Dịch Vụ -->
   <a href="dichvu?action=add" class="btn btn-primary mb-3">Thêm Dịch Vụ</a>
 
+  <!-- Bảng Danh Sách Dịch Vụ -->
   <table class="table table-bordered">
     <thead class="table-dark">
     <tr>
@@ -34,10 +42,11 @@
       <td><%= dv.getIdDichVu() %></td>
       <td><%= dv.getTen() %></td>
       <td><%= dv.getMoTa() %></td>
-      <td><%= dv.getGia() %></td>
+      <td><%= dv.getGia() %> VNĐ</td>
       <td><%= dv.getTrangThai().equals("hoat_dong") ? "Hoạt Động" : "Tạm Ngưng" %></td>
       <td>
-        <a href="dichvu?action=delete&id=<%= dv.getIdDichVu() %>" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+        <a href="dichvu?action=delete&id=<%= dv.getIdDichVu() %>" class="btn btn-danger btn-sm"
+           onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
         <% if (dv.getTrangThai().equals("hoat_dong")) { %>
         <a href="dichvu?action=suspend&id=<%= dv.getIdDichVu() %>" class="btn btn-warning btn-sm">Tạm Ngưng</a>
         <% } %>
@@ -49,6 +58,7 @@
     %>
     </tbody>
   </table>
+  </a>
 </div>
 </body>
 </html>

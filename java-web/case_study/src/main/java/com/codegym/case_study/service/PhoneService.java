@@ -13,7 +13,12 @@ public class PhoneService implements IPhoneService {
     }
 
     @Override
-    public Phone findById(int id) { // Cài đặt phương thức tìm theo ID
+    public Phone findById(int id) {
         return phoneRepository.getPhoneById(id);
+    }
+
+    @Override
+    public List<Phone> timKiemDienThoai(String keyword) {
+        return phoneRepository.timKiemDienThoai(keyword);
     }
 }
