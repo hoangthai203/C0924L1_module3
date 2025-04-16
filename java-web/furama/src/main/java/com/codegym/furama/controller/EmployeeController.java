@@ -54,7 +54,24 @@ public class EmployeeController extends HttpServlet {
     }
 
     private void showList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Employee> employees = employeeService.findAll();
+        String keyword = request.getParameter("search");
+        if (keyword == null) keyword = "";
+
+        int page = 1;
+        int limit = 5; // số dòng trên 1 trang
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+        } catch (NumberFormatException ignored) {}
+
+        int offset = (page - 1) * limit;
+        int total = employeeService.countTotalEmployeeByName(keyword);
+        int totalPages = (int) Math.ceil((double) total / limit);
+
+        List<Employee> employees = employeeService.searchByNamePaging(keyword, offset, limit);
+
+        request.setAttribute("search", keyword);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
         request.setAttribute("employees", employees);
         request.setAttribute("positions", new PositionRepository().findAll());
         request.setAttribute("educationDegrees", new EducationDegreeRepository().findAll());

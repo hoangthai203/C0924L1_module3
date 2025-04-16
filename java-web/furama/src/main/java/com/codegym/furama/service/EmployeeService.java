@@ -33,4 +33,14 @@ public class EmployeeService implements IEmployeeService {
     public void remove(String id) {
         employeeRepository.remove(id);
     }
+    @Override
+    public List<Employee> searchByNamePaging(String keyword, int offset, int limit) {
+        return employeeRepository.searchByNamePaging(keyword, offset, limit);
+    }
+
+    @Override
+    public int countTotalEmployeeByName(String keyword) {
+        return employeeRepository.countTotalEmployeeByName(keyword);
+    }
+
 }
