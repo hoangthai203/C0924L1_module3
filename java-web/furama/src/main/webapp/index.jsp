@@ -74,7 +74,7 @@
             <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
             <li class="nav-item"><a class="nav-link" href="/employee">Employee</a></li>
             <li class="nav-item"><a class="nav-link" href="/customer">Customer</a></li>
-            <li class="nav-item"><a class="nav-link" href="/service">Service</a></li>
+            <li class="nav-item"><a class="nav-link" href="/facility">Service</a></li>
             <li class="nav-item"><a class="nav-link" href="/contract">Contract</a></li>
         </ul>
         <form class="d-flex me-2">
